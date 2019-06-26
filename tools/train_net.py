@@ -35,6 +35,7 @@ except ImportError:
 
 def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
+    
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
 
@@ -121,6 +122,8 @@ def run_test(cfg, model, distributed):
 
 
 def main():
+    os.environ['CUDA_VISIBLE_DEVICES'] = '5, 6'
+    
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config-file",

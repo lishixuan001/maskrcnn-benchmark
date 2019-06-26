@@ -24,7 +24,7 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
         dataset_catalog (DatasetCatalog): contains the information on how to
             construct a dataset.
         is_train (bool): whether to setup the dataset for training or testing
-    """
+    """    
     if not isinstance(dataset_list, (list, tuple)):
         raise RuntimeError(
             "dataset_list should be a list of strings, got {}".format(dataset_list)
