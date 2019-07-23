@@ -72,6 +72,7 @@ def boxlist_iou(boxlist1, boxlist2):
     Reference:
       https://github.com/chainer/chainercv/blob/master/chainercv/utils/bbox/bbox_iou.py
     """
+
     if boxlist1.size != boxlist2.size:
         raise RuntimeError(
                 "boxlists should have same image size, got {}, {}".format(boxlist1, boxlist2))
@@ -119,8 +120,12 @@ def cat_boxlist(bboxes):
     assert isinstance(bboxes, (list, tuple))
     assert all(isinstance(bbox, BoxList) for bbox in bboxes)
 
-    size = bboxes[0].size
-    assert all(bbox.size == size for bbox in bboxes)
+    try:
+        size = bboxes[0].size
+        assert all(bbox.size == size for bbox in bboxes)
+    except:
+        print([bbox.size for bbox in bboxes])
+        return
 
     mode = bboxes[0].mode
     assert all(bbox.mode == mode for bbox in bboxes)

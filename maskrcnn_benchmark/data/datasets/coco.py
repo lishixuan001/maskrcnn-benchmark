@@ -6,6 +6,7 @@ from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
 from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
 from pdb import set_trace as st
+import numpy.random as random
 
 min_keypoints_per_image = 10
 
@@ -71,10 +72,22 @@ class COCODataset(torchvision.datasets.coco.CocoDetection):
         # filter crowd annotations
         # TODO might be better to add an extra field
         anno = [obj for obj in anno if obj["iscrowd"] == 0]
-
+        
+        crop_x, crop_y = round(32 * random.random()), round(32 * random.random())
+        
         boxes = [obj["bbox"] for obj in anno]
         boxes = torch.as_tensor(boxes).reshape(-1, 4)  # guard against no boxes
-        target = BoxList(boxes, img.size, mode="xywh").convert("xyxy")
+
+        # Crop Image
+        boxes[:, 0] -= crop_y
+        boxes[:, 1] -= crop_x
+        boxes[:, 0][boxes[:, 0] <= 0] = 0
+        boxes[:, 1][boxes[:, 1] <= 0] = 0
+        
+        # Crop Size
+        crop_size = (224, 224)
+
+        target = BoxList(boxes, crop_size, crop_point=(crop_x, crop_y), mode="xywh").convert("xyxy")
 
         classes = [obj["category_id"] for obj in anno]
         classes = [self.json_category_id_to_contiguous_id[c] for c in classes]
@@ -83,18 +96,43 @@ class COCODataset(torchvision.datasets.coco.CocoDetection):
 
         if anno and "segmentation" in anno[0]:
             masks = [obj["segmentation"] for obj in anno]
-            masks = SegmentationMask(masks, img.size, mode='poly')
-            target.add_field("masks", masks)
+            
+            # Crop Mask
+            croped_masks = []
+            for mask in masks:
+                croped_layer = []
+                for layer in mask:
+                    croped_mask = []
+                    try:
+                        assert len(layer) % 2 == 0
+                    except:
+                        print(len(layer))
+                        return
+                    for i in range(0, len(layer), 2):
+                        croped_mask.append(max(0, layer[i] - crop_x))
+                        croped_mask.append(max(0, layer[i+1] - crop_y))
+                    croped_layer.append(croped_mask)
+                croped_masks.append(croped_layer)
+            
+            assert len(masks) == len(croped_masks)
+            assert len(masks[0]) == len(croped_masks[0])
+            assert len(masks[0][0]) == len(croped_masks[0][0])
+            
+            croped_masks = SegmentationMask(croped_masks, crop_size, mode='poly')
+            target.add_field("masks", croped_masks)
 
-        if anno and "keypoints" in anno[0]:
-            keypoints = [obj["keypoints"] for obj in anno]
-            keypoints = PersonKeypoints(keypoints, img.size)
-            target.add_field("keypoints", keypoints)
+#         if anno and "keypoints" in anno[0]:
+#             keypoints = [obj["keypoints"] for obj in anno]
+#             keypoints = PersonKeypoints(keypoints, img.size)
+#             target.add_field("keypoints", keypoints)
 
         target = target.clip_to_image(remove_empty=True)
 
         if self._transforms is not None:
             img, target = self._transforms(img, target)
+          
+        # Crop Image
+        img = img[:, crop_x:crop_x+224, crop_y:crop_y+224]
         
         return img, target, idx
 
