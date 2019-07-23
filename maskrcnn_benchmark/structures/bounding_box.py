@@ -1,5 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 import torch
+from pdb import set_trace as st
 
 # transpose
 FLIP_LEFT_RIGHT = 0
@@ -64,11 +65,16 @@ class BoxList(object):
             bbox = torch.cat((xmin, ymin, xmax, ymax), dim=-1)
             bbox = BoxList(bbox, self.size, mode=mode)
         else:
-            TO_REMOVE = 1
-            bbox = torch.cat(
-                (xmin, ymin, xmax - xmin + TO_REMOVE, ymax - ymin + TO_REMOVE), dim=-1
-            )
-            bbox = BoxList(bbox, self.size, mode=mode)
+            
+            try:
+                TO_REMOVE = 1
+                bbox = torch.cat(
+                    (xmin, ymin, xmax - xmin + TO_REMOVE, ymax - ymin + TO_REMOVE), dim=-1
+                )
+                bbox = BoxList(bbox, self.size, mode=mode)
+            except:
+                st()
+                
         bbox._copy_extra_fields(self)
         return bbox
 

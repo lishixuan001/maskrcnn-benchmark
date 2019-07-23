@@ -11,6 +11,7 @@ from maskrcnn_benchmark.structures.image_list import to_image_list
 from ..backbone import build_backbone
 from ..rpn.rpn import build_rpn
 from ..roi_heads.roi_heads import build_roi_heads
+from pdb import set_trace as st
 
 
 class GeneralizedRCNN(nn.Module):
@@ -26,11 +27,12 @@ class GeneralizedRCNN(nn.Module):
     def __init__(self, cfg):
         super(GeneralizedRCNN, self).__init__()
 
+        self.cfg = cfg
         self.backbone = build_backbone(cfg)
         self.rpn = build_rpn(cfg, self.backbone.out_channels)
         self.roi_heads = build_roi_heads(cfg, self.backbone.out_channels)
 
-    def forward(self, images, targets=None):
+    def forward(self, images, targets=None, iteration=None):
         """
         Arguments:
             images (list[Tensor] or ImageList): images to be processed
@@ -45,9 +47,23 @@ class GeneralizedRCNN(nn.Module):
         """
         if self.training and targets is None:
             raise ValueError("In training mode, targets should be passed")
+        
+#         print("=============== GeneralRCNN ================")
+#         print(iteration)
+#         print(images.tensors)
+#         print(targets[0].bbox)
+#         print(images.tensors)
+#         print("============================================")
+        
         images = to_image_list(images)
         features = self.backbone(images.tensors)
+        
         proposals, proposal_losses = self.rpn(images, features, targets)
+#         try:
+#             proposals, proposal_losses = self.rpn(images, features, targets)
+#         except:
+#             st()
+            
         if self.roi_heads:
             x, result, detector_losses = self.roi_heads(features, proposals, targets)
         else:

@@ -25,6 +25,9 @@ except ImportError:
 
 
 def main():
+    
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0, 6'
+    
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Inference")
     parser.add_argument(
         "--config-file",

@@ -5,7 +5,7 @@ import os
 
 
 class DatasetCatalog(object):
-    DATA_DIR = "datasets"
+    DATA_DIR = "../datasets"
     DATASETS = {
         "coco_2017_train": {
             "img_dir": "coco/train2017",
@@ -104,13 +104,13 @@ class DatasetCatalog(object):
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
-        "meibo_train": {
-            "img_dir": "meibo/train",
-            "ann_file": "meibo/annotations/train.json"
+        "meibo_UL_train": {
+            "img_dir": "meibo/UL/train",
+            "ann_file": "meibo/UL/annotations/train.json"
         },
-        "meibo_test": {
-            "img_dir": "meibo/test",
-            "ann_file": "meibo/annotations/test.json"
+        "meibo_UL_test": {
+            "img_dir": "meibo/UL/test",
+            "ann_file": "meibo/UL/annotations/test.json"
         }
     }
 
@@ -146,7 +146,7 @@ class DatasetCatalog(object):
                 ann_file=os.path.join(data_dir, attrs["ann_file"]),
             )
             return dict(
-                factory="MeiboDataset",
+                factory="COCODataset",
                 args=args,
             )
         raise RuntimeError("Dataset not available: {}".format(name))

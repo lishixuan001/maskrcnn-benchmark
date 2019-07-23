@@ -11,7 +11,7 @@ MODEL:
     PRE_NMS_TOP_N_TRAIN: 2000
     PRE_NMS_TOP_N_TEST: 1000
     POST_NMS_TOP_N_TEST: 1000
-    FPN_POST_NMS_TOP_N_TEST: 4000 # Change to NumberOfGPUs * 1000
+    FPN_POST_NMS_TOP_N_TEST: 1000 
   ROI_HEADS:
     USE_FPN: True
   ROI_BOX_HEAD:
@@ -30,8 +30,8 @@ MODEL:
     SHARE_BOX_FEATURE_EXTRACTOR: False
   MASK_ON: True
 DATASETS:
-  TRAIN: ("coco_2017_train", "coco_2017_val")
-  TEST: ("coco_2017_val",)
+  TRAIN: ("coco_2014_train", "coco_2014_valminusminival")
+  TEST: ("coco_2014_minival",)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:

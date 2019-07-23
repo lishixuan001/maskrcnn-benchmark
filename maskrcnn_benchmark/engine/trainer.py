@@ -8,6 +8,7 @@ import torch.distributed as dist
 
 from maskrcnn_benchmark.utils.comm import get_world_size
 from maskrcnn_benchmark.utils.metric_logger import MetricLogger
+from pdb import set_trace as st
 
 from apex import amp
 
@@ -59,6 +60,7 @@ def do_train(
         if any(len(target) < 1 for target in targets):
             logger.error(f"Iteration={iteration + 1} || Image Ids used for training {_} || targets Length={[len(target) for target in targets]}" )
             continue
+        
         data_time = time.time() - end
         iteration = iteration + 1
         arguments["iteration"] = iteration
@@ -67,9 +69,13 @@ def do_train(
 
         images = images.to(device)
         targets = [target.to(device) for target in targets]
-
-        loss_dict = model(images, targets)
-
+        
+        loss_dict = model(images, targets, iteration)
+#         try:
+#             loss_dict = model(images, targets, iteration)
+#         except: 
+#             st()
+            
         losses = sum(loss for loss in loss_dict.values())
 
         # reduce losses over all GPUs for logging purposes

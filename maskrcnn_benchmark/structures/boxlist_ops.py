@@ -4,7 +4,7 @@ import torch
 from .bounding_box import BoxList
 
 from maskrcnn_benchmark.layers import nms as _box_nms
-
+from pdb import set_trace as st
 
 def boxlist_nms(boxlist, nms_thresh, max_proposals=-1, score_field="scores"):
     """
@@ -42,9 +42,17 @@ def remove_small_boxes(boxlist, min_size):
     # TODO maybe add an API for querying the ws / hs
     xywh_boxes = boxlist.convert("xywh").bbox
     _, _, ws, hs = xywh_boxes.unbind(dim=1)
+   
     keep = (
         (ws >= min_size) & (hs >= min_size)
     ).nonzero().squeeze(1)
+#     try:
+#         keep = (
+#             (ws >= min_size) & (hs >= min_size)
+#         ).nonzero().squeeze(1)
+#     except:
+#         st()
+        
     return boxlist[keep]
 
 

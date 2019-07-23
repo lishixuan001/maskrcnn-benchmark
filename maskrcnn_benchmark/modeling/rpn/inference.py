@@ -108,10 +108,14 @@ class RPNPostProcessor(torch.nn.Module):
         proposals = proposals.view(N, -1, 4)
 
         result = []
+        
         for proposal, score, im_shape in zip(proposals, objectness, image_shapes):
             boxlist = BoxList(proposal, im_shape, mode="xyxy")
             boxlist.add_field("objectness", score)
             boxlist = boxlist.clip_to_image(remove_empty=False)
+            
+            
+            
             boxlist = remove_small_boxes(boxlist, self.min_size)
             boxlist = boxlist_nms(
                 boxlist,
@@ -188,12 +192,15 @@ def make_rpn_postprocessor(config, rpn_box_coder, is_train):
 
     pre_nms_top_n = config.MODEL.RPN.PRE_NMS_TOP_N_TRAIN
     post_nms_top_n = config.MODEL.RPN.POST_NMS_TOP_N_TRAIN
+    
     if not is_train:
         pre_nms_top_n = config.MODEL.RPN.PRE_NMS_TOP_N_TEST
         post_nms_top_n = config.MODEL.RPN.POST_NMS_TOP_N_TEST
+        
     fpn_post_nms_per_batch = config.MODEL.RPN.FPN_POST_NMS_PER_BATCH
     nms_thresh = config.MODEL.RPN.NMS_THRESH
     min_size = config.MODEL.RPN.MIN_SIZE
+    
     box_selector = RPNPostProcessor(
         pre_nms_top_n=pre_nms_top_n,
         post_nms_top_n=post_nms_top_n,
