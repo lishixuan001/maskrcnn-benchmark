@@ -74,10 +74,32 @@ def boxlist_iou(boxlist1, boxlist2):
     """
 
     if boxlist1.size != boxlist2.size:
-        raise RuntimeError(
+        boxlist1.convert("xywh")
+        boxlist2.convert("xywh")
+        
+        if boxlist2.crop_point is not None:
+            crop_x, crop_y = boxlist2.crop_point
+            assert boxlist1.size[0] > boxlist2.size[0]
+            boxlist1.size = boxlist2.size
+            boxlist1.bbox[:, 0] -= crop_y
+            boxlist1.bbox[:, 1] -= crop_x
+            boxlist1.bbox[:, 0][boxlist1.bbox[:, 0] <= 0] = 0
+            boxlist1.bbox[:, 1][boxlist1.bbox[:, 1] <= 0] = 0
+        elif boxlist1.crop_point is not None:
+            crop_x, crop_y = boxlist1.crop_point
+            assert boxlist2.size[0] > boxlist1.size[0]
+            boxlist2.size = boxlist1.size
+            boxlist2.bbox[:, 0] -= crop_y
+            boxlist2.bbox[:, 1] -= crop_x
+            boxlist2.bbox[:, 0][boxlist2.bbox[:, 0] <= 0] = 0
+            boxlist2.bbox[:, 1][boxlist2.bbox[:, 1] <= 0] = 0
+        else:
+            raise RuntimeError(
                 "boxlists should have same image size, got {}, {}".format(boxlist1, boxlist2))
+            
     boxlist1 = boxlist1.convert("xyxy")
     boxlist2 = boxlist2.convert("xyxy")
+    
     N = len(boxlist1)
     M = len(boxlist2)
 

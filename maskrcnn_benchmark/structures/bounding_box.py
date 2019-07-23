@@ -33,6 +33,7 @@ class BoxList(object):
             raise ValueError("mode should be 'xyxy' or 'xywh'")
 
         self.bbox = bbox
+        self.crop_point = crop_point
         self.size = image_size  # (image_width, image_height)
         self.mode = mode
         self.extra_fields = {}
@@ -63,7 +64,7 @@ class BoxList(object):
         xmin, ymin, xmax, ymax = self._split_into_xyxy()
         if mode == "xyxy":
             bbox = torch.cat((xmin, ymin, xmax, ymax), dim=-1)
-            bbox = BoxList(bbox, self.size, mode=mode)
+            bbox = BoxList(bbox, self.size, crop_point=self.crop_point, mode=mode)
         else:
             
             try:
@@ -71,7 +72,7 @@ class BoxList(object):
                 bbox = torch.cat(
                     (xmin, ymin, xmax - xmin + TO_REMOVE, ymax - ymin + TO_REMOVE), dim=-1
                 )
-                bbox = BoxList(bbox, self.size, mode=mode)
+                bbox = BoxList(bbox, self.size, crop_point=self.crop_point, mode=mode)
             except:
                 st()
                 
@@ -106,7 +107,7 @@ class BoxList(object):
         if ratios[0] == ratios[1]:
             ratio = ratios[0]
             scaled_box = self.bbox * ratio
-            bbox = BoxList(scaled_box, size, mode=self.mode)
+            bbox = BoxList(scaled_box, size, crop_point=self.crop_point, mode=self.mode)
             # bbox._copy_extra_fields(self)
             for k, v in self.extra_fields.items():
                 if not isinstance(v, torch.Tensor):
@@ -123,7 +124,7 @@ class BoxList(object):
         scaled_box = torch.cat(
             (scaled_xmin, scaled_ymin, scaled_xmax, scaled_ymax), dim=-1
         )
-        bbox = BoxList(scaled_box, size, mode="xyxy")
+        bbox = BoxList(scaled_box, size, crop_point=self.crop_point, mode="xyxy")
         # bbox._copy_extra_fields(self)
         for k, v in self.extra_fields.items():
             if not isinstance(v, torch.Tensor):
@@ -162,7 +163,7 @@ class BoxList(object):
         transposed_boxes = torch.cat(
             (transposed_xmin, transposed_ymin, transposed_xmax, transposed_ymax), dim=-1
         )
-        bbox = BoxList(transposed_boxes, self.size, mode="xyxy")
+        bbox = BoxList(transposed_boxes, self.size, crop_point=self.crop_point, mode="xyxy")
         # bbox._copy_extra_fields(self)
         for k, v in self.extra_fields.items():
             if not isinstance(v, torch.Tensor):
@@ -190,7 +191,7 @@ class BoxList(object):
         cropped_box = torch.cat(
             (cropped_xmin, cropped_ymin, cropped_xmax, cropped_ymax), dim=-1
         )
-        bbox = BoxList(cropped_box, (w, h), mode="xyxy")
+        bbox = BoxList(cropped_box, (w, h), crop_point=self.crop_point, mode="xyxy")
         # bbox._copy_extra_fields(self)
         for k, v in self.extra_fields.items():
             if not isinstance(v, torch.Tensor):
@@ -201,7 +202,7 @@ class BoxList(object):
     # Tensor-like methods
 
     def to(self, device):
-        bbox = BoxList(self.bbox.to(device), self.size, self.mode)
+        bbox = BoxList(self.bbox.to(device), self.size, crop_point=self.crop_point, mode=self.mode)
         for k, v in self.extra_fields.items():
             if hasattr(v, "to"):
                 v = v.to(device)
@@ -209,9 +210,13 @@ class BoxList(object):
         return bbox
 
     def __getitem__(self, item):
-        bbox = BoxList(self.bbox[item], self.size, self.mode)
+        bbox = BoxList(self.bbox[item], self.size, crop_point=self.crop_point, mode=self.mode)
         for k, v in self.extra_fields.items():
-            bbox.add_field(k, v[item])
+            try:
+                bbox.add_field(k, v[item])
+            except:
+                print(k)
+                print(v)
         return bbox
 
     def __len__(self):
@@ -242,7 +247,7 @@ class BoxList(object):
         return area
 
     def copy_with_fields(self, fields, skip_missing=False):
-        bbox = BoxList(self.bbox, self.size, self.mode)
+        bbox = BoxList(self.bbox, self.size, crop_point=self.crop_point, mode=self.mode)
         if not isinstance(fields, (list, tuple)):
             fields = [fields]
         for field in fields:
