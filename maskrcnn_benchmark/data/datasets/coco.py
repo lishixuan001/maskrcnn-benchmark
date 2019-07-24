@@ -6,7 +6,6 @@ from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
 from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
 from pdb import set_trace as st
-import numpy.random as random
 
 min_keypoints_per_image = 10
 
@@ -111,7 +110,6 @@ class COCODataset(torchvision.datasets.coco.CocoDetection):
             img, target = self._transforms(img, target)
         
         return img, target, idx
-
 
     def get_img_info(self, index):
         img_id = self.id_to_img_map[index]

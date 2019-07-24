@@ -122,11 +122,7 @@ def run_test(cfg, model, distributed):
 
 
 def main():
-<<<<<<< HEAD
-    os.environ['CUDA_VISIBLE_DEVICES'] = '3, 6'
-=======
     os.environ['CUDA_VISIBLE_DEVICES'] = '4, 5, 1, 7'
->>>>>>> resize_256
     
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(

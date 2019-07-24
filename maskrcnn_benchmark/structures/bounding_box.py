@@ -201,7 +201,7 @@ class BoxList(object):
     # Tensor-like methods
 
     def to(self, device):
-        bbox = BoxList(self.bbox.to(device), self.size, mode=self.mode)
+        bbox = BoxList(self.bbox.to(device), self.size, self.mode)
         for k, v in self.extra_fields.items():
             if hasattr(v, "to"):
                 v = v.to(device)
@@ -209,21 +209,16 @@ class BoxList(object):
         return bbox
 
     def __getitem__(self, item):
-        bbox = BoxList(self.bbox[item], self.size, mode=self.mode)
+        bbox = BoxList(self.bbox[item], self.size, self.mode)
         for k, v in self.extra_fields.items():
             try:
                 bbox.add_field(k, v[item])
             except:
-<<<<<<< HEAD
-                print(k)
-                print(v)
-=======
                 print("=============== BBOX INCOMPAT ===============")
                 print(f"BBOX SHAPE: [{self.bbox.shape}]")
                 print(f"KEY: [{k}]\nValue: [{v}]")
                 print("=============== BBOX INCOMPAT ===============")
             
->>>>>>> resize_256
         return bbox
 
     def __len__(self):
@@ -254,7 +249,7 @@ class BoxList(object):
         return area
 
     def copy_with_fields(self, fields, skip_missing=False):
-        bbox = BoxList(self.bbox, self.size, mode=self.mode)
+        bbox = BoxList(self.bbox, self.size, self.mode)
         if not isinstance(fields, (list, tuple)):
             fields = [fields]
         for field in fields:

@@ -60,19 +60,6 @@ def do_train(
         if any(len(target) < 1 for target in targets):
             logger.error(f"Iteration={iteration + 1} || Image Ids used for training {_} || targets Length={[len(target) for target in targets]}" )
             continue
-            
-#         print("============== PRINT INFO ===============")
-        
-#         print(type(images))
-#         print(images.tensors.shape)
-          
-#         print("----------------------------------------")
-        
-#         print(type(targets))
-#         print(targets[0].bbox)
-#         print(targets[0].clip_to_image().bbox)
-        
-#         print("============== PRINT END ===============")
         
         data_time = time.time() - end
         iteration = iteration + 1
