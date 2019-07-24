@@ -214,8 +214,16 @@ class BoxList(object):
             try:
                 bbox.add_field(k, v[item])
             except:
+<<<<<<< HEAD
                 print(k)
                 print(v)
+=======
+                print("=============== BBOX INCOMPAT ===============")
+                print(f"BBOX SHAPE: [{self.bbox.shape}]")
+                print(f"KEY: [{k}]\nValue: [{v}]")
+                print("=============== BBOX INCOMPAT ===============")
+            
+>>>>>>> resize_256
         return bbox
 
     def __len__(self):

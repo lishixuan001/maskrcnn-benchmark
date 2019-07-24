@@ -393,10 +393,21 @@ class PolygonList(object):
         assert isinstance(size, (list, tuple)), str(type(size))
 
         self.polygons = []
+
+        
+        
         for p in polygons:
             p = PolygonInstance(p, size)
             if len(p) > 0:
                 self.polygons.append(p)
+            else:
+                print("=================== Seg Masks ====================")
+                print(f"POLYGON: {p}")
+                print(f"SEG_MASK: {len(polygons)}")
+                print(f"SEG_MASK: {len(self.polygons)}")
+                print("===================  Seg END  ====================")
+        
+            
 
         self.size = tuple(size)
 

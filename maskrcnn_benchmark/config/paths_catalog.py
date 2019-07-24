@@ -5,7 +5,7 @@ import os
 
 
 class DatasetCatalog(object):
-    DATA_DIR = "../datasets"
+    DATA_DIR = "/home/lishixuan001/ICSI/datasets"
     DATASETS = {
         "coco_2017_train": {
             "img_dir": "coco/train2017",
@@ -111,6 +111,14 @@ class DatasetCatalog(object):
         "meibo_UL_test": {
             "img_dir": "meibo/UL/test",
             "ann_file": "meibo/UL/annotations/test.json"
+        },
+        "meibo_UL_train_origin": {
+            "img_dir": "meibo/UL/origin_train",
+            "ann_file": "meibo/UL/origin_annotations/train.json"
+        },
+        "meibo_UL_test_origin": {
+            "img_dir": "meibo/UL/origin_test",
+            "ann_file": "meibo/UL/origin_annotations/test.json"
         }
     }
 

@@ -37,7 +37,6 @@ def do_coco_evaluation(
         if output_folder:
             torch.save(res, os.path.join(output_folder, "box_proposals.pth"))
         return
-    
     logger.info("Preparing results for COCO format")
     coco_results = {}
     if "bbox" in iou_types:
@@ -57,12 +56,10 @@ def do_coco_evaluation(
             file_path = f.name
             if output_folder:
                 file_path = os.path.join(output_folder, iou_type + ".json")
-            
             res = evaluate_predictions_on_coco(
                 dataset.coco, coco_results[iou_type], file_path, iou_type
             )
             results.update(res)
-            
     logger.info(results)
     check_expected_results(results, expected_results, expected_results_sigma_tol)
     if output_folder:
@@ -317,13 +314,9 @@ def evaluate_predictions_on_coco(
     from pycocotools.cocoeval import COCOeval
 
     coco_dt = coco_gt.loadRes(str(json_result_file)) if coco_results else COCO()
-    
-    print(f"--> coco_dt: \n {coco_dt}\n")
+
     # coco_dt = coco_gt.loadRes(coco_results)
-    
     coco_eval = COCOeval(coco_gt, coco_dt, iou_type)
-    print(f"--> coco_eval: \n {coco_eval}\n")
-    
     coco_eval.evaluate()
     coco_eval.accumulate()
     coco_eval.summarize()

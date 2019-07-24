@@ -86,11 +86,24 @@ class COCODataset(torchvision.datasets.coco.CocoDetection):
             masks = [obj["segmentation"] for obj in anno]
             masks = SegmentationMask(masks, img.size, mode='poly')
             target.add_field("masks", masks)
+        else:
+            print(f"\n WARNING_ NO SEGMENTATION: {idx} \n")
 
         if anno and "keypoints" in anno[0]:
             keypoints = [obj["keypoints"] for obj in anno]
             keypoints = PersonKeypoints(keypoints, img.size)
             target.add_field("keypoints", keypoints)
+
+        if boxes.shape[0] != len(masks.instances.polygons):
+            print("========= PRINT INFO =========")
+        
+            print(f"INDEX: [{idx}]")
+            print(f"BBOX: [{boxes.shape}]")
+            print(f"SEGM: [{len(masks.instances.polygons)}]")
+            
+            print("========= PRINT END =========")
+            raise RuntimeError("BOX and SEGM inconsistant")
+        
 
         target = target.clip_to_image(remove_empty=True)
 
