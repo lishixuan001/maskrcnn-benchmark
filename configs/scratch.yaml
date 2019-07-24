@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "./outputs/model_final.pth"
+  WEIGHT: ""
   DEVICE: "cuda"
   BACKBONE:
     CONV_BODY: "R-50-FPN"
@@ -34,13 +34,13 @@ MODEL:
     SHARE_BOX_FEATURE_EXTRACTOR: False
   MASK_ON: True
 INPUT:
-  MIN_SIZE_TRAIN: (256,)
-  MAX_SIZE_TRAIN: 256
-  MIN_SIZE_TEST: 256
-  MAX_SIZE_TEST: 256
+  MIN_SIZE_TRAIN: (425,)
+  MAX_SIZE_TRAIN: 904
+  MIN_SIZE_TEST: 425
+  MAX_SIZE_TEST: 904
 DATASETS:
-  TRAIN: ("meibo_UL_train",)
-  TEST: ("meibo_UL_test",)
+  TRAIN: ("meibo_UL_train_origin",)
+  TEST: ("meibo_UL_test_origin",)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
@@ -49,8 +49,8 @@ SOLVER:
   STEPS: (30000, 40000)
   MAX_ITER: 60000
   CHECKPOINT_PERIOD: 1000
-  IMS_PER_BATCH: 16
+  IMS_PER_BATCH: 8
 TEST:
-  IMS_PER_BATCH: 4
-OUTPUT_DIR: "./outputs/"
+  IMS_PER_BATCH: 8
+OUTPUT_DIR: "../outputs/maskrcnn-benchmark/outputs/Record_model/"
 

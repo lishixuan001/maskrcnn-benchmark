@@ -13,12 +13,14 @@ from ..utils.comm import all_gather
 from ..utils.comm import synchronize
 from ..utils.timer import Timer, get_time_str
 from .bbox_aug import im_detect_bbox_aug
+from pdb import set_trace as st
 
 
 def compute_on_dataset(model, data_loader, device, timer=None):
     model.eval()
     results_dict = {}
     cpu_device = torch.device("cpu")
+    
     for _, batch in enumerate(tqdm(data_loader)):
         images, targets, image_ids = batch
         with torch.no_grad():

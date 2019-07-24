@@ -16,6 +16,7 @@ from maskrcnn_benchmark.utils.collect_env import collect_env_info
 from maskrcnn_benchmark.utils.comm import synchronize, get_rank
 from maskrcnn_benchmark.utils.logger import setup_logger
 from maskrcnn_benchmark.utils.miscellaneous import mkdir
+from pdb import set_trace as st
 
 # Check if we can enable mixed-precision via apex.amp
 try:
@@ -26,7 +27,7 @@ except ImportError:
 
 def main():
     
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0, 6'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '7'
     
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Inference")
     parser.add_argument(
@@ -96,7 +97,10 @@ def main():
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
             mkdir(output_folder)
             output_folders[idx] = output_folder
+    
+    print("============= Start Creating Data Loader ============\n")
     data_loaders_val = make_data_loader(cfg, is_train=False, is_distributed=distributed)
+    
     for output_folder, dataset_name, data_loader_val in zip(output_folders, dataset_names, data_loaders_val):
         inference(
             model,

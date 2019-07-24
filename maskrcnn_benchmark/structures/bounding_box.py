@@ -211,7 +211,14 @@ class BoxList(object):
     def __getitem__(self, item):
         bbox = BoxList(self.bbox[item], self.size, self.mode)
         for k, v in self.extra_fields.items():
-            bbox.add_field(k, v[item])
+            try:
+                bbox.add_field(k, v[item])
+            except:
+                print("=============== BBOX INCOMPAT ===============")
+                print(f"BBOX SHAPE: [{self.bbox.shape}]")
+                print(f"KEY: [{k}]\nValue: [{v}]")
+                print("=============== BBOX INCOMPAT ===============")
+            
         return bbox
 
     def __len__(self):
