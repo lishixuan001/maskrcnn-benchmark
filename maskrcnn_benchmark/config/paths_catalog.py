@@ -104,13 +104,13 @@ class DatasetCatalog(object):
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
-        "meibo_UL_train": {
-            "img_dir": "meibo/UL/train",
-            "ann_file": "meibo/UL/annotations/train.json"
+        "meibo_UL_train_224": {
+            "img_dir": "meibo/UL/224_train",
+            "ann_file": "meibo/UL/224_annotations/train.json"
         },
-        "meibo_UL_test": {
-            "img_dir": "meibo/UL/test",
-            "ann_file": "meibo/UL/annotations/test.json"
+        "meibo_UL_test_224": {
+            "img_dir": "meibo/UL/224_test",
+            "ann_file": "meibo/UL/224_annotations/test.json"
         },
         "meibo_UL_train_origin": {
             "img_dir": "meibo/UL/origin_train",
@@ -119,6 +119,22 @@ class DatasetCatalog(object):
         "meibo_UL_test_origin": {
             "img_dir": "meibo/UL/origin_test",
             "ann_file": "meibo/UL/origin_annotations/test.json"
+        },
+        "meibo_UL_train_256": {
+            "img_dir": "meibo/UL/256_train",
+            "ann_file": "meibo/UL/256_annotations/train.json"
+        },
+        "meibo_UL_test_256": {
+            "img_dir": "meibo/UL/256_test",
+            "ann_file": "meibo/UL/256_annotations/test.json"
+        },
+        "meibo_UL_train_425": {
+            "img_dir": "meibo/UL/425_train",
+            "ann_file": "meibo/UL/425_annotations/train.json"
+        },
+        "meibo_UL_test_425": {
+            "img_dir": "meibo/UL/425_test",
+            "ann_file": "meibo/UL/425_annotations/test.json"
         }
     }
 

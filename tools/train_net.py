@@ -122,7 +122,7 @@ def run_test(cfg, model, distributed):
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = '4, 5, 1, 7'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '2, 3, 6, 1'
     
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
