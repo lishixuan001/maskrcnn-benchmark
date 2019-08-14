@@ -35,7 +35,7 @@ except ImportError:
 
 def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
-    
+
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
 
@@ -122,7 +122,7 @@ def run_test(cfg, model, distributed):
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = '2, 3, 6, 1'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '2, 3, 4, 0'
     
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
@@ -145,7 +145,7 @@ def main():
         default=None,
         nargs=argparse.REMAINDER,
     )
-
+   
     args = parser.parse_args()
 
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
